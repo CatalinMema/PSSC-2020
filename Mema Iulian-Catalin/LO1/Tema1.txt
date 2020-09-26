@@ -1,0 +1,13 @@
+Stack overflow este o aplicatie prin care programatorii pot scrie intrebari si raspunsuri la diferite probleme intampinate din programare.Utilizatorii au nevoie sa se inscrie in aplicatie 
+printr-un cont pentru a scrie intrebari si raspunsuri.Utilizatorul poate cauta o intrebare asemanatoare cu cea pe care vrea sa o adreseze pentru a se asigura ca aceasta nu a fost abordata 
+sau daca raspunsul la intrebare deja exista.
+
+Utilizatorul poate scrie intrebari prin care descrie problemele si dificultatile pe care le-a intampinat si are nevoie sa vada raspunsurile primite de la alti utilizatori.Poate utiliza etichete (tag-uri), 
+numele altor utilizatori sau o grupare de cuvinte,prin care filtreaza cautarea,pentru a gasi mult mai usor intrebari sau raspunsuri.Utilizatorul poate clasifica o intrebare dupa diferite etichete.
+Folosind etichetele potrivite, este mai usor pentru toti sa gaseasca intrebari si sa raspunda.
+
+Dupa primirea raspunsurilor utilizatorul poate examina ideea prezentata in mesaj iar apoi poate sa ofere un feedback .Utilizatorul poate modifica intrebarea dar poate si comenta la propriul subiect 
+dezbatut pentru a oferii informatii suplimentare.Utilizatorii pot vota raspunsurile la intrebari (raspunsurile pe care le considera utile si de ajutor), raspunsurile cu cele mai multe 
+aprecieri urca in top ,iar informatia necesara rezolvarii problemei este descoperita mai rapid.
+
+Utilizatorul poate cauta un job.Pentru filtrarea cautarii utilizatorul poate folosii diferite criterii prin care gaseste jobul mai eficient.
