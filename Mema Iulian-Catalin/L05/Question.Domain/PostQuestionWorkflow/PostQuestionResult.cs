@@ -14,9 +14,9 @@ namespace Question.Domain.PostQuestionWorkflow
         public class QuestionPosted : IPostQuestionResult
         {
             public Guid QuestionId { get; private set; }
-            public string Title { get; private set; } // question title
-            public string Body { get; private set; } // question body ( question description )
-            public List<string> Tags { get; private set; }  // question tags . Am folosit lista pentru ca putem adauga mai multe tags.
+            public string Title { get; private set; } 
+            public string Body { get; private set; } 
+            public List<string> Tags { get; private set; } 
             public int VoteCount { get; private set; }
             public IReadOnlyCollection<VoteEnum> AllVotes { get; private set; }
             public QuestionPosted(Guid questionId, string title, string body, List<string> tags,int votecount,IReadOnlyCollection<VoteEnum>allvotes)

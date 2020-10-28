@@ -11,13 +11,13 @@ namespace Question.Domain.PostQuestionWorkflow
         
         [Required]
         [MinLength(2),MaxLength(1000)]
-        public string Title { get; private set; } // question title
+        public string Title { get; private set; } 
 
         [Required]
-        public string Body { get; set; } // question body ( question description )
+        public string Body { get; set; }
 
         [Required]
-        public List<string> Tags { get; set; } // question tags . Am folosit lista pentru ca putem adauga mai multe tags.
+        public List<string> Tags { get; set; } 
         
         [Required]
         public int Votes { get; private set; }
