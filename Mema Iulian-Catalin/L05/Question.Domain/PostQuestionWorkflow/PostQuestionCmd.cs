@@ -5,7 +5,6 @@ using System.Text;
 
 namespace Question.Domain.PostQuestionWorkflow
 {
-    // product type = Title*Body*Tags
     public struct PostQuestionCmd
     {
         
