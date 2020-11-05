@@ -8,7 +8,7 @@ using CSharp.Choices;
 namespace Tema6.Outputs
 {
     [AsChoice]
-    public static partial class CreateReplyResult
+    public static partial class ValidateReplyResult
     {
         public interface IPublishReplyResult { }
 
@@ -34,8 +34,8 @@ namespace Tema6.Outputs
         public class InvalidRequest : IPublishReplyResult
         {
             public string ValidationErrors { get; }
-            public CreateReplyCmd Cmd { get; }
-            public InvalidRequest(string validationErrors, CreateReplyCmd cmd)
+            public ValidateReplyCmd Cmd { get; }
+            public InvalidRequest(string validationErrors, ValidateReplyCmd cmd)
             {
                 ValidationErrors = validationErrors;
                 Cmd = cmd;

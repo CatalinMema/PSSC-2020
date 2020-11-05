@@ -11,8 +11,8 @@ namespace Tema6
 {
     public static class Domain
     {
-        public static Port<CreateReplyResult.IPublishReplyResult> ValidateReply(int questionId, int authorId, string answer)
-            => NewPort<CreateReplyCmd, CreateReplyResult.IPublishReplyResult>(new CreateReplyCmd(authorId, questionId, answer));
+        public static Port<ValidateReplyResult.IPublishReplyResult> ValidateReply(int questionId, int authorId, string answer)
+            => NewPort<ValidateReplyCmd, ValidateReplyResult.IPublishReplyResult>(new ValidateReplyCmd(authorId, questionId, answer));
 
         public static Port<CheckLanguageResult.ICheckLanguageResult> CheckLanguage(string text)
             => NewPort<CheckLanguageCmd, CheckLanguageResult.ICheckLanguageResult>(new CheckLanguageCmd(text));
