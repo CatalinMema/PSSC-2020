@@ -47,7 +47,7 @@ namespace Silo
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(HelloGrain).Assembly).WithReferences())
                 .AddSimpleMessageStreamProvider("SMSProvider", options => { options.FireAndForgetDelivery = true; })
                 .AddMemoryGrainStorage("PubSubStore")
-            //.UseDashboard();
+                //.UseDashboard()
                .ConfigureLogging(logging => logging.AddConsole());
 
             var host = builder.Build();

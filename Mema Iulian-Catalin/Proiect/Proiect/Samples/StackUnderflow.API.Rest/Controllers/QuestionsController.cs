@@ -17,6 +17,7 @@ using StackUnderflow.Domain.Schema.Questions.CreateAnswerOp;
 using StackUnderflow.Domain.Core.Contexts.Questions;
 using StackUnderflow.EF;
 using Microsoft.EntityFrameworkCore;
+using Orleans;
 
 namespace StackUnderflow.API.Rest.Controllers
 {
@@ -26,11 +27,12 @@ namespace StackUnderflow.API.Rest.Controllers
     {
         private readonly IInterpreterAsync _interpreter;
         private readonly DatabaseContext _dbContext;
-
-        public QuestionsController(IInterpreterAsync interpreter, DatabaseContext dbContext)
+        private readonly IClusterClient _client;
+        public QuestionsController(IInterpreterAsync interpreter, DatabaseContext dbContext, IClusterClient client)
         {
             _interpreter = interpreter;
             _dbContext = dbContext;
+            _client = client;
         }
 
         [HttpPost("createReply")]
