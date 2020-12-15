@@ -9,6 +9,6 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions
     public class QuestionsDependencies
     {
         public Func<string> GenerateConfirmationToken { get; set; }
-        public Func<ValidationLetter, TryAsync<ValidationAck>> SendEmail { get; set; }
+        public Func<ValidationLetter, TryAsync<ValidationAck>> SendValidationEmail { get; set; }
     }
 }

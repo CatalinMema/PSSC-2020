@@ -6,15 +6,15 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.ValidationOp
 {
     public class ValidationLetter
     {
-        public string VEmail { get; private set; }
-        public string VLetter { get; private set; }
-        public Uri VLink { get; private set; }
+        public string Email { get; private set; }
+        public string Letter { get; private set; }
+        public Uri Link { get; private set; }
 
-        public ValidationLetter(string email,string letter,Uri Vlink)
+        public ValidationLetter(string email,string letter,Uri link)
         {
-            VEmail = email;
-            VLetter = letter;
-            VLink = Vlink;
+            Email = email;
+            Letter = letter;
+            Link = link;
         }
     }
 }

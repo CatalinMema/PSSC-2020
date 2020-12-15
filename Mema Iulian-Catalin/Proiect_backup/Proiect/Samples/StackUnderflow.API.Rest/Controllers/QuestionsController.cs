@@ -39,7 +39,7 @@ namespace StackUnderflow.API.Rest.Controllers
             _client = client;
         }
 
-        [HttpPost("question")]
+        [HttpPost("createAndValidateQuestion")]
         public async Task<IActionResult> CreateAndValidateQuestion([FromBody] CreateQuestionCmd cmd)
         {
             QuestionsWriteContext ctx = new QuestionsWriteContext(
@@ -48,25 +48,26 @@ namespace StackUnderflow.API.Rest.Controllers
 
             var dep = new QuestionsDependencies();
             dep.GenerateConfirmationToken = () => Guid.NewGuid().ToString();
-            dep.SendEmail = SendValidationEmail;
+            //dep.SendEmail = (ValidationLetter letter) => async () => new ValidationAck(Guid.NewGuid().ToString());
+            dep.SendValidationEmail = SendEmail;
 
             var expr = from createQuestionResult in QuestionsContext.CreateQuestion(cmd)
-                       let quser = createQuestionResult.SafeCast<CreateQuestionResult.QuestionCreated>().Select(p => p.User)
+                       let quser = createQuestionResult.SafeCast<CreateQuestionResult.QuestionCreated>().Select(p => p.AdminUser)
                        let validationQuestionCmd = new ValidationQuestionCmd(quser)
-                       from ValidationQuestionResult in QuestionsContext.ValidateQuestion(validationQuestionCmd)
-                       select new { createQuestionResult, ValidationQuestionResult };
+                       from validationQuestionResult in QuestionsContext.ValidateQuestion(validationQuestionCmd)
+                       select new { createQuestionResult, validationQuestionResult };
 
             var r = await _interpreter.Interpret(expr, ctx, dep);
             _dbContext.SaveChanges();
             return r.createQuestionResult.Match(
                 created => (IActionResult)Ok(created.Question.PostId),
-                notCreated => StatusCode(StatusCodes.Status500InternalServerError, "QQuestion could not be created"),
+                notCreated => StatusCode(StatusCodes.Status500InternalServerError, "Question could not be created"),
                 invalidRequest => BadRequest("Invalid request")); 
         }
-        private TryAsync<ValidationAck> SendValidationEmail(ValidationLetter letter) => async () =>
+        private TryAsync<ValidationAck> SendEmail(ValidationLetter letter) => async () =>
         {
-            var eSender = _client.GetGrain<IGrainSend>(0);
-            await eSender.SendMessage(letter.VLetter);
+            var emialSender = _client.GetGrain<IEmailSender>(0);
+            await emialSender.SendEmailAsync(letter.Letter);
             return new ValidationAck(Guid.NewGuid().ToString());
         };
     }

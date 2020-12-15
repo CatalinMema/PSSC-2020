@@ -23,7 +23,7 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.ValidationOp
             var wf = from isValid in cmd.TryValidate()
                      from user in cmd.QUser.ToTryAsync()
                      let letter = GenerateValidationLetter(user)
-                     from validationAck in dependencies.SendEmail(letter)
+                     from validationAck in dependencies.SendValidationEmail(letter)
                      select (user, validationAck);
 
             return await wf.Match(

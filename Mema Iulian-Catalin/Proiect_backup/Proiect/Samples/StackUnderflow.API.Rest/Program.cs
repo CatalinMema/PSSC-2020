@@ -28,15 +28,15 @@ namespace FakeSO.API.Rest
                 })
                 .UseOrleans(siloBuilder =>
                 {
-                siloBuilder.UseLocalhostClustering()
-                .Configure<ClusterOptions>(options =>
-                {
-                    options.ClusterId = "dev";
-                    options.ServiceId = "OrleansBasics";
+                    siloBuilder.UseLocalhostClustering()
+                    .Configure<ClusterOptions>(options =>
+                    {
+                        options.ClusterId = "dev";
+                        options.ServiceId = "OrleansBasics";
 
-                })
-                .ConfigureApplicationParts(
-                    parts => parts.AddApplicationPart(typeof(SendGrain).Assembly).WithReferences());
+                    })
+                    .ConfigureApplicationParts(
+                        parts => parts.AddApplicationPart(typeof(SendGrain).Assembly).WithReferences());
                 });
     }
 }

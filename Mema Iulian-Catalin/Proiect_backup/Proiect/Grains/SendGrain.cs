@@ -1,11 +1,12 @@
-﻿using Orleans;
+﻿using GrainInterfaces;
+using Orleans;
 using System.Threading.Tasks;
 
 namespace Grains
 {
-    public class SendGrain : Orleans.Grain, IGrain
+    public class SendGrain : Orleans.Grain, IEmailSender
     {
-        public Task<string> SendMessage(string message)
+        public Task<string> SendEmailAsync(string message)
         {
             return Task.FromResult(message);
         }

@@ -46,7 +46,7 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp
             {
                 Title = cmd.Title,
                 PostText = cmd.Body,
-                PostTag = (ICollection<PostTag>)cmd.Tags
+                PostTag = cmd.Tags,
             };
             return question;
         }
