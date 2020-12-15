@@ -13,10 +13,14 @@ using Access.Primitives.EFCore;
 using StackUnderflow.Domain.Schema.Backoffice.InviteTenantAdminOp;
 using StackUnderflow.Domain.Schema.Backoffice;
 using LanguageExt;
-using StackUnderflow.Domain.Schema.Questions.CreateAnswerOp;
 using StackUnderflow.Domain.Core.Contexts.Questions;
 using StackUnderflow.EF;
 using Microsoft.EntityFrameworkCore;
+using Orleans;
+using StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp;
+using StackUnderflow.Domain.Core.Contexts.Questions.ValidationOp;
+using Microsoft.AspNetCore.Http;
+using GrainInterfaces;
 
 namespace StackUnderflow.API.Rest.Controllers
 {
@@ -25,37 +29,45 @@ namespace StackUnderflow.API.Rest.Controllers
     public class QuestionsController : ControllerBase
     {
         private readonly IInterpreterAsync _interpreter;
-        private readonly DatabaseContext _dbContext;
+        private readonly StackUnderflowContext _dbContext;
+        private readonly IClusterClient _client;
 
-        public QuestionsController(IInterpreterAsync interpreter, DatabaseContext dbContext)
+        public QuestionsController(IInterpreterAsync interpreter, StackUnderflowContext dbContext, IClusterClient client)
         {
             _interpreter = interpreter;
             _dbContext = dbContext;
+            _client = client;
         }
 
-        [HttpPost("createReply")]
-        public async Task<IActionResult> CreateReply([FromBody] CreateReplyCmd cmd)
+        [HttpPost("question")]
+        public async Task<IActionResult> CreateAndValidateQuestion([FromBody] CreateQuestionCmd cmd)
         {
-            var dep = new QuestionsDependencies();
-            var replies = await _dbContext.Replies.ToListAsync();
-            var ctx = new QuestionsWriteContext(replies);
+            QuestionsWriteContext ctx = new QuestionsWriteContext(
+                new EFList<Post>(_dbContext.Post),
+                new EFList<User>(_dbContext.User));
 
-            var expr = from createTenantResult in QuestionsContext.CreateReply(cmd)
-                       select createTenantResult;
+            var dep = new QuestionsDependencies();
+            dep.GenerateConfirmationToken = () => Guid.NewGuid().ToString();
+            dep.SendEmail = SendValidationEmail;
+
+            var expr = from createQuestionResult in QuestionsContext.CreateQuestion(cmd)
+                       let quser = createQuestionResult.SafeCast<CreateQuestionResult.QuestionCreated>().Select(p => p.User)
+                       let validationQuestionCmd = new ValidationQuestionCmd(quser)
+                       from ValidationQuestionResult in QuestionsContext.ValidateQuestion(validationQuestionCmd)
+                       select new { createQuestionResult, ValidationQuestionResult };
 
             var r = await _interpreter.Interpret(expr, ctx, dep);
-
-            _dbContext.Replies.Add(new DatabaseModel.Models.Reply { Body = cmd.Body, AuthorUserId = new Guid("f505c32f-3573-4459-8112-af8276d3e919"), QuestionId = cmd.QuestionId, ReplyId = 4 });
-            //var reply = await _dbContext.Replies.Where(r => r.ReplyId == 4).SingleOrDefaultAsync();
-            //reply.Body = "Text updated";
-            //_dbContext.Replies.Update(reply);
-            await _dbContext.SaveChangesAsync();
-
-
-            return r.Match(
-                succ => (IActionResult)Ok(succ.Body),
-                fail => BadRequest("Reply could not be added")
-                );
+            _dbContext.SaveChanges();
+            return r.createQuestionResult.Match(
+                created => (IActionResult)Ok(created.Question.PostId),
+                notCreated => StatusCode(StatusCodes.Status500InternalServerError, "QQuestion could not be created"),
+                invalidRequest => BadRequest("Invalid request")); 
         }
+        private TryAsync<ValidationAck> SendValidationEmail(ValidationLetter letter) => async () =>
+        {
+            var eSender = _client.GetGrain<IGrainSend>(0);
+            await eSender.SendMessage(letter.VLetter);
+            return new ValidationAck(Guid.NewGuid().ToString());
+        };
     }
 }

@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace StackUnderflow.Domain.Core.Contexts.Questions.PostQuestionOp
+namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp
 {
-    public class PostQuestionCmd
+    public struct CreateQuestionCmd
     {
-        public PostQuestionCmd()
-        {
-
-        }
-
-        public PostQuestionCmd(int questionId, string title, string body, List<string> tags, int votes)
+        public CreateQuestionCmd(Guid questionId, string title,string body,List<string> tags, int votes)
         {
             QuestionId = questionId;
             Title = title;
@@ -22,7 +17,7 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.PostQuestionOp
         }
 
         [Required]
-        public int QuestionId { get; set; }
+        public Guid QuestionId { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
