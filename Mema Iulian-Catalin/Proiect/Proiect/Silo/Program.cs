@@ -1,5 +1,6 @@
 ﻿using Grains;
 using Orleans;
+using Microsoft.Extensions.Logging;
 using Orleans.Configuration;
 using Orleans.Hosting;
 using System;
@@ -45,9 +46,9 @@ namespace Silo
                 })
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(HelloGrain).Assembly).WithReferences())
                 .AddSimpleMessageStreamProvider("SMSProvider", options => { options.FireAndForgetDelivery = true; })
-                .AddMemoryGrainStorage("PubSubStore");
+                .AddMemoryGrainStorage("PubSubStore")
             //.UseDashboard();
-            //.ConfigureLogging(logging => logging.AddConsole());
+               .ConfigureLogging(logging => logging.AddConsole());
 
             var host = builder.Build();
             await host.StartAsync();
