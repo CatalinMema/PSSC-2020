@@ -36,7 +36,8 @@ namespace FakeSO.API.Rest
 
                     })
                     .ConfigureApplicationParts(
-                        parts => parts.AddApplicationPart(typeof(SendGrain).Assembly).WithReferences());
+                        parts => parts.AddApplicationPart(typeof(EmailSenderGrain).Assembly)
+                        .WithReferences());
                 });
     }
 }

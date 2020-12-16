@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Grains
 {
-    public class SendGrain : Orleans.Grain, IEmailSender
+    public class EmailSenderGrain : Orleans.Grain, IEmailSender
     {
         public Task<string> SendEmailAsync(string message)
         {

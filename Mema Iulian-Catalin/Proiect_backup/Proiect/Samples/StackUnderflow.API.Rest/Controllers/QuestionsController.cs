@@ -44,31 +44,33 @@ namespace StackUnderflow.API.Rest.Controllers
         {
             QuestionsWriteContext ctx = new QuestionsWriteContext(
                 new EFList<Post>(_dbContext.Post),
+                new EFList<TenantUser>(_dbContext.TenantUser),
                 new EFList<User>(_dbContext.User));
 
-            var dep = new QuestionsDependencies();
-            dep.GenerateConfirmationToken = () => Guid.NewGuid().ToString();
+            var dependencies = new QuestionsDependencies();
+            dependencies.GenerateValidationToken = () => Guid.NewGuid().ToString();
             //dep.SendEmail = (ValidationLetter letter) => async () => new ValidationAck(Guid.NewGuid().ToString());
-            dep.SendValidationEmail = SendEmail;
+            dependencies.SendValidationEmail = SendEmail;
 
             var expr = from createQuestionResult in QuestionsContext.CreateQuestion(cmd)
-                       let quser = createQuestionResult.SafeCast<CreateQuestionResult.QuestionCreated>().Select(p => p.AdminUser)
-                       let validationQuestionCmd = new ValidationQuestionCmd(quser)
+                       let adminUser = createQuestionResult.SafeCast<CreateQuestionResult.QuestionCreated>().Select(p => p.AdminUser)
+                       let validationQuestionCmd = new ValidationQuestionCmd(adminUser)
                        from validationQuestionResult in QuestionsContext.ValidateQuestion(validationQuestionCmd)
                        select new { createQuestionResult, validationQuestionResult };
 
-            var r = await _interpreter.Interpret(expr, ctx, dep);
+            var r = await _interpreter.Interpret(expr, ctx, dependencies);
             _dbContext.SaveChanges();
             return r.createQuestionResult.Match(
                 created => (IActionResult)Ok(created.Question.PostId),
                 notCreated => StatusCode(StatusCodes.Status500InternalServerError, "Question could not be created"),
                 invalidRequest => BadRequest("Invalid request")); 
         }
-        private TryAsync<ValidationAck> SendEmail(ValidationLetter letter) => async () =>
-        {
+        private TryAsync<ValidationAck> SendEmail(ValidationLetter letter) 
+            => async () =>
+            {
             var emialSender = _client.GetGrain<IEmailSender>(0);
             await emialSender.SendEmailAsync(letter.Letter);
             return new ValidationAck(Guid.NewGuid().ToString());
-        };
+            };
     }
 }

@@ -11,7 +11,9 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions
 {
     public static class QuestionsContext
     {
-        public static Port<ICreateQuestionResult> CreateQuestion(CreateQuestionCmd cmd) => NewPort<CreateQuestionCmd, ICreateQuestionResult>(cmd);
+        public static Port<ICreateQuestionResult> CreateQuestion(CreateQuestionCmd cmd)
+        {
+            return NewPort<CreateQuestionCmd, ICreateQuestionResult>(cmd); }
 
         public static Port<IValidationQuestionResult> ValidateQuestion(ValidationQuestionCmd cmd) => NewPort<ValidationQuestionCmd, IValidationQuestionResult>(cmd);
         
