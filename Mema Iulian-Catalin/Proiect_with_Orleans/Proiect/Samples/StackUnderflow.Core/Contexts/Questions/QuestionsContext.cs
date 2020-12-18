@@ -5,12 +5,10 @@ using System.Text;
 using static PortExt;
 using StackUnderflow.Domain.Schema.Questions.CheckLanguageOp;
 using static StackUnderflow.Domain.Schema.Questions.CheckLanguageOp.CheckLanguageResult;
-using static StackUnderflow.Domain.Schema.Questions.SendQuestionOwnerAcknowledgementOp.SendQuestionOwnerAcknowledgementResult;
-using StackUnderflow.Domain.Schema.Questions.SendQuestionOwnerAcknowledgementOp;
-using static StackUnderflow.Domain.Schema.Questions.SendReplyAuthorAcknowledgementOp.SendReplyAuthorAcknowledgementResult;
-using StackUnderflow.Domain.Schema.Questions.SendReplyAuthorAcknowledgementOp;
 using static StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp.CreateQuestionResult;
 using StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp;
+using static StackUnderflow.Domain.Core.Contexts.Questions.SendQuestionAckOp.SendQuestionAckResult;
+using StackUnderflow.Domain.Core.Contexts.Questions.SendQuestionAckOp;
 
 namespace StackUnderflow.Domain.Core.Contexts.Questions
 {
@@ -22,10 +20,7 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions
         public static Port<ICheckLanguageResult> CheckLanguage(CheckLanguageCmd checkLanguageCmd) =>
             NewPort<CheckLanguageCmd, ICheckLanguageResult>(checkLanguageCmd);
 
-        public static Port<ISendQuestionOwnerAcknowledgementResult> SendQuestionOwnerAcknowledgement(SendQuestionOwnerAcknowledgementCmd cmd) =>
-            NewPort<SendQuestionOwnerAcknowledgementCmd, ISendQuestionOwnerAcknowledgementResult>(cmd);
-
-        public static Port<ISendReplyAuthorAcknowledgementResult> SendReplyAuthorAcknowledgement(SendReplyAuthorAcknowledgementCmd cmd) =>
-           NewPort<SendReplyAuthorAcknowledgementCmd, ISendReplyAuthorAcknowledgementResult>(cmd);
+        public static Port<ISendQuestionAckResult> SendQuestionAckt(SendQuestionAckCmd cmd) =>
+            NewPort<SendQuestionAckCmd, ISendQuestionAckResult>(cmd);
     }
 }
