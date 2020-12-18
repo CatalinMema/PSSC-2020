@@ -13,6 +13,7 @@ using Access.Primitives.EFCore;
 using StackUnderflow.Domain.Schema.Backoffice.InviteTenantAdminOp;
 using StackUnderflow.Domain.Schema.Backoffice;
 using LanguageExt;
+using StackUnderflow.EF;
 
 namespace StackUnderflow.API.Rest.Controllers
 {
@@ -21,9 +22,9 @@ namespace StackUnderflow.API.Rest.Controllers
     public class BackofficeController : ControllerBase
     {
         private readonly IInterpreterAsync _interpreter;
-        private readonly StackUnderflowContext _dbContext;
+        private readonly DatabaseContext _dbContext;
 
-        public BackofficeController(IInterpreterAsync interpreter, StackUnderflowContext dbContext)
+        public BackofficeController(IInterpreterAsync interpreter, DatabaseContext dbContext)
         {
             _interpreter = interpreter;
             _dbContext = dbContext;
