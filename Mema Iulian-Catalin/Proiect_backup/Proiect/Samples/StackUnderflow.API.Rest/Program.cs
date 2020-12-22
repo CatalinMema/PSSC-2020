@@ -33,7 +33,6 @@ namespace FakeSO.API.Rest
                     {
                         options.ClusterId = "dev";
                         options.ServiceId = "OrleansBasics";
-
                     })
                     .ConfigureApplicationParts(
                         parts => parts.AddApplicationPart(typeof(EmailSenderGrain).Assembly)

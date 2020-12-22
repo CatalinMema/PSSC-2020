@@ -20,6 +20,7 @@ using Microsoft.Extensions.Logging;
 using OpenTracing;
 using OpenTracing.Util;
 using StackUnderflow.Backoffice.Adapters.CreateTenant;
+using StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp;
 using StackUnderflow.EF;
 using StackUnderflow.EF.Models;
 
@@ -41,9 +42,9 @@ namespace FakeSO.API.Rest
             services.AddSingleton<IExecutionContext, LiveExecutionContext>();
             services.AddTransient<IInterpreterAsync>(sp => new LiveInterpreterAsync(sp));
 
-            services.AddDbContext<DatabaseContext>(builder =>
+            services.AddDbContext<StackUnderflowContext>(builder =>
             {
-                builder.UseSqlServer(Configuration.GetConnectionString("StackOverflow"));
+                builder.UseSqlServer(Configuration.GetConnectionString("StackOverflow1"));
             });
 
             services.AddControllers();

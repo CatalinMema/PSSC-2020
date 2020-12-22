@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Access.Primitives.Extensions.ObjectExtensions;
 using Access.Primitives.IO;
 using Microsoft.AspNetCore.Mvc;
-using StackUnderflow.Domain.Core;
-using StackUnderflow.Domain.Core.Contexts;
 using StackUnderflow.Domain.Schema.Backoffice.CreateTenantOp;
 using StackUnderflow.EF.Models;
 using Access.Primitives.EFCore;
 using StackUnderflow.Domain.Schema.Backoffice.InviteTenantAdminOp;
-using StackUnderflow.Domain.Schema.Backoffice;
 using LanguageExt;
 using StackUnderflow.Domain.Core.Contexts.Questions;
-using StackUnderflow.EF;
-using Microsoft.EntityFrameworkCore;
 using Orleans;
 using StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp;
 using StackUnderflow.Domain.Core.Contexts.Questions.ValidationOp;
@@ -25,7 +17,7 @@ using GrainInterfaces;
 namespace StackUnderflow.API.Rest.Controllers
 {
     [ApiController]
-    [Route("questions")]
+    [Route("Question")]
     public class QuestionsController : ControllerBase
     {
         private readonly IInterpreterAsync _interpreter;
@@ -39,29 +31,22 @@ namespace StackUnderflow.API.Rest.Controllers
             _client = client;
         }
 
-        [HttpPost("createAndValidateQuestion")]
-        public async Task<IActionResult> CreateAndValidateQuestion([FromBody] CreateQuestionCmd cmd)
+        [HttpPost("CreateQuestion")]
+        public async Task<IActionResult> CreateQuestion([FromBody] CreateQuestionCmd cmd)
         {
             QuestionsWriteContext ctx = new QuestionsWriteContext(
-                new EFList<Post>(_dbContext.Post),
-                new EFList<TenantUser>(_dbContext.TenantUser),
-                new EFList<User>(_dbContext.User));
+                new EFList<QuestionTable>(_dbContext.QuestionTable));
 
             var dependencies = new QuestionsDependencies();
-            dependencies.GenerateValidationToken = () => Guid.NewGuid().ToString();
-            //dep.SendEmail = (ValidationLetter letter) => async () => new ValidationAck(Guid.NewGuid().ToString());
             dependencies.SendValidationEmail = SendEmail;
 
             var expr = from createQuestionResult in QuestionsContext.CreateQuestion(cmd)
-                       let adminUser = createQuestionResult.SafeCast<CreateQuestionResult.QuestionCreated>().Select(p => p.AdminUser)
-                       let validationQuestionCmd = new ValidationQuestionCmd(adminUser)
-                       from validationQuestionResult in QuestionsContext.ValidateQuestion(validationQuestionCmd)
-                       select new { createQuestionResult, validationQuestionResult };
+                       select  createQuestionResult;
 
             var r = await _interpreter.Interpret(expr, ctx, dependencies);
             _dbContext.SaveChanges();
-            return r.createQuestionResult.Match(
-                created => (IActionResult)Ok(created.Question.PostId),
+            return r.Match(
+                created => (IActionResult)Ok(created),
                 notCreated => StatusCode(StatusCodes.Status500InternalServerError, "Question could not be created"),
                 invalidRequest => BadRequest("Invalid request")); 
         }

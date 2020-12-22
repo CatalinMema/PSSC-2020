@@ -7,12 +7,10 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions
 {
     public class QuestionReadContext
     {
-        public IEnumerable<Post> Questions { get; }
-        public IEnumerable<User> Users { get; }
-        public QuestionReadContext(IEnumerable<Post> questions, IEnumerable<User> users)
+        public IEnumerable<QuestionTable> Questions { get; }
+        public QuestionReadContext(IEnumerable<QuestionTable> questions)
         {
             Questions = questions;
-            Users = users;
         }
 
     }

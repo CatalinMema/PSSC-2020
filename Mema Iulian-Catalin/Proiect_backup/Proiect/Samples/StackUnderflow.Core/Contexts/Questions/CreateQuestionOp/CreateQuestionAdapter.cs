@@ -32,21 +32,22 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp
             return result;
         }
 
-        public ICreateQuestionResult AddQuestionIfMissing(QuestionsWriteContext state,Post post)
+        public ICreateQuestionResult AddQuestionIfMissing(QuestionsWriteContext state,QuestionTable question)
         {
-            if (state.Questions.Any(p => p.Title.Equals(post.Title)))
-                return new QuestionNotCreated();
-            if (state.Questions.All(p => p.PostId != post.PostId))
-                state.Questions.Add(post);
-            return new QuestionCreated(post, post.TenantUser.User);
+            if (state.Questions.Any(obj => obj.Title.Equals(question.Title)))
+                return new QuestionNotCreated("Titlu deja inserat");
+            if (state.Questions.All(obj => obj.QuestionId != question.QuestionId))
+                state.Questions.Add(question);
+            return new QuestionCreated(question);
         }
-        private Post CreateQuestionFromCommand(CreateQuestionCmd cmd)
+        private QuestionTable CreateQuestionFromCommand(CreateQuestionCmd cmd)
         {
-            var question = new Post()
+            var question = new QuestionTable()
             {
+                QuestionId=cmd.QuestionId,
+                Body=cmd.Body,
                 Title = cmd.Title,
-                PostText = cmd.Body,
-                PostTag = cmd.Tags,
+                Tag=cmd.Tag
             };
             return question;
         }

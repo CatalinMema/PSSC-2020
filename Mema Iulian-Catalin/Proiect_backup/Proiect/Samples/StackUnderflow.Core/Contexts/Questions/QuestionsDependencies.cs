@@ -8,7 +8,6 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions
 {
     public class QuestionsDependencies
     {
-        public Func<string> GenerateValidationToken { get; set; }
         public Func<ValidationLetter, TryAsync<ValidationAck>> SendValidationEmail { get; set; }
     }
 }

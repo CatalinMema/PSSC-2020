@@ -27,6 +27,7 @@ namespace StackUnderflow.EF.Models
         public virtual DbSet<PostType> PostType { get; set; }
         public virtual DbSet<PostView> PostView { get; set; }
         public virtual DbSet<Tag> Tag { get; set; }
+        public virtual DbSet<QuestionTable> QuestionTable { get; set; }
         public virtual DbSet<Tenant> Tenant { get; set; }
         public virtual DbSet<TenantUser> TenantUser { get; set; }
         public virtual DbSet<User> User { get; set; }
@@ -215,6 +216,13 @@ namespace StackUnderflow.EF.Models
                     .HasForeignKey(d => d.TenantId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Tag_Tenant");
+            });
+
+            modelBuilder.Entity<QuestionTable>(entity =>
+            {
+                entity.HasIndex(e => e.QuestionId)
+                .HasName("UX_Question_QuestionId")
+                .IsUnique();
             });
 
             modelBuilder.Entity<Tenant>(entity =>

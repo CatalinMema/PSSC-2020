@@ -8,25 +8,20 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp
 {
     public struct CreateQuestionCmd
     {
-        public CreateQuestionCmd(Guid questionId, string title,string body, HashSet<PostTag> tags, int votes)
+        [Required]
+        public int QuestionId { get; set; }
+        [Required]
+        public string Title { get; set; }
+        [Required]
+        public string Body { get; set; }
+        [Required]
+        public string Tag { get; set; }
+        public CreateQuestionCmd(int questionId, string title, string body, string tag)
         {
             QuestionId = questionId;
             Title = title;
             Body = body;
-            Tags = tags;
-            Votes = votes;
+            Tag = tag;
         }
-
-        [Required]
-        public Guid QuestionId { get; set; }
-        [Required]
-        public string Title { get; set; }
-        [Required]
-        [MaxLength(1000)]
-        public string Body { get; set; }
-        [Required]
-        public HashSet<PostTag> Tags;
-        [Required]
-        public int Votes { get; set; }
     }
 }

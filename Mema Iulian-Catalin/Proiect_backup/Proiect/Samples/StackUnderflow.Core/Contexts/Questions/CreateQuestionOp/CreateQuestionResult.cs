@@ -13,13 +13,12 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp
         public interface ICreateQuestionResult : IDynClonable { }
         public class QuestionCreated : ICreateQuestionResult
         {
-            public User AdminUser { get; }
-            public Post Question { get; }
+            public QuestionTable Question { get; }
 
-            public QuestionCreated(Post question,User adminUser)
+            public QuestionCreated(QuestionTable question)
             {
                 Question = question;
-                AdminUser = adminUser;
+               
             }
 
             public object Clone() => this.ShallowClone();
@@ -28,6 +27,11 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp
         public class QuestionNotCreated : ICreateQuestionResult
         {
             public string Reason { get; private set; }
+
+            public QuestionNotCreated(string reason)
+            {
+                Reason = reason;
+            }
             public object Clone() => this.ShallowClone();
         }
 

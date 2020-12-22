@@ -24,7 +24,14 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.ValidationOp
             }
 
         }
-        public class QuestionNotValidated : IValidationQuestionResult { }
+        public class QuestionNotValidated : IValidationQuestionResult 
+        {
+            public string Reason { get; }
+            public QuestionNotValidated(string reason)
+            {
+                Reason = reason;
+            }
+        }
 
         public class InvalidRequest: IValidationQuestionResult
         {
