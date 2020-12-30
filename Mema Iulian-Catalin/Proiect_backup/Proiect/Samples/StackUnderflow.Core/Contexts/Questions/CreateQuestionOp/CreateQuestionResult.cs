@@ -13,12 +13,12 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp
         public interface ICreateQuestionResult : IDynClonable { }
         public class QuestionCreated : ICreateQuestionResult
         {
-            public QuestionTable Question { get; }
-
-            public QuestionCreated(QuestionTable question)
+            public Post Question { get; }
+            public Guid QuestionUser { get; }
+            public QuestionCreated(Post question, Guid Questionuser)
             {
                 Question = question;
-               
+                QuestionUser = Questionuser;
             }
 
             public object Clone() => this.ShallowClone();

@@ -46,7 +46,7 @@ namespace StackUnderflow.API.Rest.Controllers
             var r = await _interpreter.Interpret(expr, ctx, dependencies);
 
             return r.createTenantResult.Match(
-                created => (IActionResult)Ok(created.Tenant.TenantId),
+                created => (IActionResult)Ok(created),
                 notCreated => BadRequest("Tenant could not be created."),
                 invalidRequest => BadRequest("Invalid request."));
         }

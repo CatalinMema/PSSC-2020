@@ -35,7 +35,7 @@ namespace StackUnderflow.API.Rest.Controllers
         public async Task<IActionResult> CreateQuestion([FromBody] CreateQuestionCmd cmd)
         {
             QuestionsWriteContext ctx = new QuestionsWriteContext(
-                new EFList<QuestionTable>(_dbContext.QuestionTable));
+                new EFList<Post>(_dbContext.Post));
 
             var dependencies = new QuestionsDependencies();
             dependencies.SendValidationEmail = SendEmail;

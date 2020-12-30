@@ -38,13 +38,13 @@ namespace FakeSO.API.Rest
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddOperations(typeof(CreateTenantAdapter).Assembly);
+            services.AddOperations(typeof(CreateQuestionAdapter).Assembly);
             services.AddSingleton<IExecutionContext, LiveExecutionContext>();
             services.AddTransient<IInterpreterAsync>(sp => new LiveInterpreterAsync(sp));
 
             services.AddDbContext<StackUnderflowContext>(builder =>
             {
-                builder.UseSqlServer(Configuration.GetConnectionString("StackOverflow1"));
+                builder.UseSqlServer(Configuration.GetConnectionString("StackU"));
             });
 
             services.AddControllers();

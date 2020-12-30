@@ -8,12 +8,12 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions
 {
     public class QuestionsWriteContext
     {
-        public ICollection<QuestionTable> Questions { get; }
+        public ICollection<Post> Questions { get; }
 
         
-        public QuestionsWriteContext(ICollection<QuestionTable> questions)
+        public QuestionsWriteContext(ICollection<Post> questions)
         {
-            Questions = questions ?? new List<QuestionTable>();
+            Questions = questions ?? new List<Post>(0);
             
         }
 

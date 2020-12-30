@@ -16,12 +16,18 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp
         public string Body { get; set; }
         [Required]
         public string Tag { get; set; }
-        public CreateQuestionCmd(int questionId, string title, string body, string tag)
+        [Required]
+        public byte Votes { get; set; }
+        [Required]
+        public Guid UserId { get; set; }
+        public CreateQuestionCmd(int questionId, string title, string body, string tag, byte votes, Guid userId)
         {
             QuestionId = questionId;
             Title = title;
             Body = body;
             Tag = tag;
+            Votes = votes;
+            UserId = userId;
         }
     }
 }

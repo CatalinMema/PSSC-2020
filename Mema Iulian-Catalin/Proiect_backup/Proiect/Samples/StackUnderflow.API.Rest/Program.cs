@@ -36,7 +36,9 @@ namespace FakeSO.API.Rest
                     })
                     .ConfigureApplicationParts(
                         parts => parts.AddApplicationPart(typeof(EmailSenderGrain).Assembly)
-                        .WithReferences());
+                        .WithReferences())
+                    .AddSimpleMessageStreamProvider("SMSProvider", options => { options.FireAndForgetDelivery = true; })
+                     .AddMemoryGrainStorage("PubSubStore"); 
                 });
     }
 }
