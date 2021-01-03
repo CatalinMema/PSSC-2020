@@ -20,7 +20,10 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp
         public byte Votes { get; set; }
         [Required]
         public Guid UserId { get; set; }
-        public CreateQuestionCmd(int questionId, string title, string body, string tag, byte votes, Guid userId)
+
+        [Required]
+        public string EmailAdress { get; set; }
+        public CreateQuestionCmd(int questionId, string title, string body, string tag, byte votes, Guid userId,string email)
         {
             QuestionId = questionId;
             Title = title;
@@ -28,6 +31,8 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp
             Tag = tag;
             Votes = votes;
             UserId = userId;
+            EmailAdress = email;
+
         }
     }
 }

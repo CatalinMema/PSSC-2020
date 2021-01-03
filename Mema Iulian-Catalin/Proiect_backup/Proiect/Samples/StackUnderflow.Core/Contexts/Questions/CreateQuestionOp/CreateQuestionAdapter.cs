@@ -36,7 +36,7 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestionOp
         {
             if (state.Questions.Any(obj => obj.Title.Equals(question.Title)))
                 return new QuestionNotCreated("Titlu deja inserat");
-            if (state.Questions.All(obj => obj.PostId != question.TenantId))
+            if (state.Questions.All(obj => obj.PostId != question.PostId))
                 state.Questions.Add(question);
             return new QuestionCreated(question, question.PostedBy);
         }
