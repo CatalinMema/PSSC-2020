@@ -18,6 +18,7 @@ using StackUnderflow.Domain.Core.Contexts.Questions.SendQuestionAuthorAcknowledg
 using StackUnderflow.Domain.Core.Contexts.Questions.CreateReplyOp;
 using StackUnderflow.Domain.Core.Contexts.Questions.SendReplyAuthorAckOp;
 using static StackUnderflow.Domain.Core.Contexts.Questions.SendReplyAuthorAckOp.SendReplyAuthorAckResult;
+using static StackUnderflow.Domain.Core.Contexts.Questions.SendQuestionAuthorAcknowledgementOp.SendQuestionAuthorAcknowledgementResult;
 
 namespace StackUnderflow.API.Rest.Controllers
 {
@@ -43,7 +44,7 @@ namespace StackUnderflow.API.Rest.Controllers
                 new EFList<Post>(_dbContext.Post));
 
             var dependencies = new QuestionsDependencies();
-            dependencies.SendValidationEmail = SendEmail;
+            dependencies.SendQuestionEmail = SendEmail;
 
             var expr = from createQuestionResult in QuestionsContext.CreateQuestion(cmd)
                        from checkLanguage in QuestionsContext.CheckLanguage(new CheckLanguageCmd(cmd.Body))
@@ -57,12 +58,12 @@ namespace StackUnderflow.API.Rest.Controllers
                 notCreated => StatusCode(StatusCodes.Status500InternalServerError, "Question could not be created"),
                 invalidRequest => BadRequest("Invalid request")); 
         }
-        private TryAsync<ValidationAck> SendEmail(ValidationLetter letter) 
+        private TryAsync<AckSent> SendEmail(ValidLetter letter) 
             => async () =>
             {
             var emialSender = _client.GetGrain<IEmailSender>(0);
             await emialSender.SendEmailAsync(letter.Letter);
-            return new ValidationAck(Guid.NewGuid().ToString());
+            return new AckSent(Guid.NewGuid(), "Question Created !", letter);
             };
 
 

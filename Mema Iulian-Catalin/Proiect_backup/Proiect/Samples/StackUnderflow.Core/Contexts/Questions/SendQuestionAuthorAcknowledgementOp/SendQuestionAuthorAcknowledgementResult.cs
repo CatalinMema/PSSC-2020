@@ -11,13 +11,18 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.SendQuestionAuthorAcknow
         public interface ISendQuestionAuthorAcknowledgementResult { }
         public class AckSent:ISendQuestionAuthorAcknowledgementResult
         {
-            public AckSent(int questionId)
+            public AckSent(Guid userId, string body, ValidLetter letter)
             {
-                QuestionId = questionId;
+                UserId = userId;
+                Body = body;
+                Letter = letter;
             }
-            public int QuestionId { get; }
-        
-        
+            public Guid UserId { get; set; }
+            //public int QuestionId { get; set; }
+            public string Body { get; set; }
+            public ValidLetter Letter { get; set; }
+
+
         }
 
         public class AckNotSent:ISendQuestionAuthorAcknowledgementResult
