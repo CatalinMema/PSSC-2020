@@ -26,27 +26,41 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.SendReplyAuthorAckOp
             return Task.CompletedTask;
         }
 
-        public async override Task<ISendReplyAuthorAckResult> Work(SendReplyAuthorAckCmd cmd, QuestionsWriteContext state, QuestionsDependencies dependencies)
+        public override async Task<ISendReplyAuthorAckResult> Work(SendReplyAuthorAckCmd cmd, QuestionsWriteContext state, QuestionsDependencies dependencies)
         {
             var workflow = from valid in state.TryValidate()
-                           let t = AddQuestToUser(state, CreateQuestFromCmd(cmd))
-                           select t;
+                           let letter = GenerateValidationLetter(cmd.UserId, cmd.AuthorEmail)
+                           //let t = AddQuestToUser(state, (SendReplyAuthorAckCmd)CreateQuestFromCmd(cmd))
+                           from validationAck in dependencies.SendReplyEmail(letter)
+                           select validationAck;
+
+
+
 
             var result = await workflow.Match(
                 Succ: r => r,
-                Fail: ex => new ReplyAuthorAckNotSent(ex.Message)
+                Fail: ex => (ISendReplyAuthorAckResult)new ReplyAuthorAckNotSent(ex.ToString())
                 );
             return result;
         }
-        private ISendReplyAuthorAckResult AddQuestToUser(QuestionsWriteContext state, SendReplyAuthorAckCmd cmd)
+
+        private ValidLetter GenerateValidationLetter(Guid userId, string email)
         {
-            return new ReplyAuthorAckSent(cmd.UserId,cmd.Body, new ValidLetter(cmd.AuthorEmail, cmd.Body, new Uri("https://stackoverflow.com/questions")));
+
+            var link = $"https://stackunderflow/QuestionReplied";
+            var letter = $@"Dear {userId} your reply is created.Please click on {link}";
+            return new ValidLetter(email, letter, new Uri(link));
+        }
+
+        /*private ISendReplyAuthorAckResult AddQuestToUser(QuestionsWriteContext state, SendReplyAuthorAckCmd cmd)
+        {
+            return new ReplyAuthorAckSent(cmd.UserId, cmd.Body, new ValidLetter(cmd.AuthorEmail, cmd.Body, new Uri("https://stackoverflow.com/questions")));
         }
 
         private SendReplyAuthorAckCmd CreateQuestFromCmd(SendReplyAuthorAckCmd cmd)
         {
             return cmd;
-        }
+        }*/
         /*
         public async override Task<ISendReplyAuthorAckResult> Work(SendReplyAuthorAckCmd cmd, QuestionsWriteContext state, QuestionsDependencies dependencies)
         {

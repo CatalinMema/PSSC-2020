@@ -78,7 +78,7 @@ namespace StackUnderflow.API.Rest.Controllers
             var expr = from createReplyResult in QuestionsContext.CreateReply(cmdReply)
                        from checkLanguage in QuestionsContext.CheckLanguage(new CheckLanguageCmd(cmdReply.Body))
                            // let email=createQuestionResult.SafeCast<CreateQuestionResult.QuestionCreated>().Select(p=>p.UserEmail)
-                       from sendAckAuthor in QuestionsContext.SendReplyAuthorAcknowledgement(new SendReplyAuthorAckCmd(Guid.NewGuid(), cmdReply.QuestionId, cmdReply.Body, cmdReply.EmailAdress))
+                       from sendAckAuthor in QuestionsContext.SendReplyAuthorAcknowledgement(new SendReplyAuthorAckCmd(cmdReply.UserId, cmdReply.QuestionId, cmdReply.Body, cmdReply.EmailAdress))
                        select createReplyResult;
 
             var r = await _interpreter.Interpret(expr, ctx, dependencies);
